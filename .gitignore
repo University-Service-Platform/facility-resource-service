@@ -1,0 +1,30 @@
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### IDEs ###
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### Logs & Env Secrets ###
+*.log
+.env
+.env.*
+application-local.properties
+application-local.yml
+
+### DB Files ###
+*.db
+*.mv.db

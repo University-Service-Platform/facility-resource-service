@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  facility-db:
+    image: mysql:8.0
+    container_name: facility-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: facility_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - facility_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  facility-resource-service:
+    build: .
+    container_name: facility-resource-service
+    ports:
+      - "8081:8081"
+    environment:
+      - PORT=8081
+      - SPRING_DATASOURCE_URL=jdbc:mysql://facility-db:3306/facility_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      facility-db:
+        condition: service_healthy
+
+volumes:
+  facility_db_data:
