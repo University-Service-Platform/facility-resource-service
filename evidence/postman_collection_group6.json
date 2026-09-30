@@ -1,0 +1,228 @@
+{
+  "info": {
+    "_postman_id": "c6a2b8e3-9824-4f41-a1bf-862fae9660b6",
+    "name": "University Services Platform - Group 6 (Facilities & Reservations)",
+    "description": "Complete Postman API test collection for Group 6 services: facility-resource-service (Port 8081) and university-reservation-service (Port 8082) deployed on Microsoft Azure Cloud VM.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "FACILITY_URL",
+      "value": "http://20.205.129.149:8081"
+    },
+    {
+      "key": "RESERVATION_URL",
+      "value": "http://20.205.129.149:8082"
+    },
+    {
+      "key": "AUTH_TOKEN",
+      "value": "dev-token"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Facility Resource Service (Port 8081)",
+      "item": [
+        {
+          "name": "List Facilities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{FACILITY_URL}}/api/facilities",
+              "host": ["{{FACILITY_URL}}"],
+              "path": ["api", "facilities"]
+            }
+          }
+        },
+        {
+          "name": "List Resources",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{FACILITY_URL}}/api/resources",
+              "host": ["{{FACILITY_URL}}"],
+              "path": ["api", "resources"]
+            }
+          }
+        },
+        {
+          "name": "Validate Resource Contract (Cross-Service)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{FACILITY_URL}}/api/resources/1/validate",
+              "host": ["{{FACILITY_URL}}"],
+              "path": ["api", "resources", "1", "validate"]
+            }
+          }
+        },
+        {
+          "name": "Validate Venue Code (Group 8 Contract)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{FACILITY_URL}}/api/resources/code/LAB-101/validate",
+              "host": ["{{FACILITY_URL}}"],
+              "path": ["api", "resources", "code", "LAB-101", "validate"]
+            }
+          }
+        },
+        {
+          "name": "Validate Unavailable Resource (Group 8 Maintenance)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{FACILITY_URL}}/api/resources/code/CONF-ROOM-202/validate",
+              "host": ["{{FACILITY_URL}}"],
+              "path": ["api", "resources", "code", "CONF-ROOM-202", "validate"]
+            }
+          }
+        },
+        {
+          "name": "Validate Unknown Resource (Group 8 Not Found)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{FACILITY_URL}}/api/resources/code/XYZ-999/validate",
+              "host": ["{{FACILITY_URL}}"],
+              "path": ["api", "resources", "code", "XYZ-999", "validate"]
+            }
+          }
+        },
+        {
+          "name": "Check Resource Availability",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceId\": 1,\n  \"date\": \"2027-05-10\",\n  \"startTime\": \"09:00:00\",\n  \"endTime\": \"11:00:00\",\n  \"attendees\": 15,\n  \"userRole\": \"STUDENT\"\n}"
+            },
+            "url": {
+              "raw": "{{FACILITY_URL}}/api/resources/check-availability",
+              "host": ["{{FACILITY_URL}}"],
+              "path": ["api", "resources", "check-availability"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. University Reservation Service (Port 8082)",
+      "item": [
+        {
+          "name": "Create Reservation (Calls Facility 8081)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{AUTH_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceId\": 1,\n  \"requesterId\": \"student-postman\",\n  \"startTime\": \"2028-06-15T10:00:00\",\n  \"endTime\": \"2028-06-15T11:00:00\",\n  \"purpose\": \"Software Engineering Group Demo\",\n  \"expectedAttendees\": 15\n}"
+            },
+            "url": {
+              "raw": "{{RESERVATION_URL}}/api/v1/reservations",
+              "host": ["{{RESERVATION_URL}}"],
+              "path": ["api", "v1", "reservations"]
+            }
+          }
+        },
+        {
+          "name": "List All Reservations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{AUTH_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{RESERVATION_URL}}/api/v1/reservations",
+              "host": ["{{RESERVATION_URL}}"],
+              "path": ["api", "v1", "reservations"]
+            }
+          }
+        },
+        {
+          "name": "Approve Reservation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{AUTH_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"actionBy\": \"manager-alex\",\n  \"reason\": \"Approved for lab presentation\"\n}"
+            },
+            "url": {
+              "raw": "{{RESERVATION_URL}}/api/v1/reservations/1/approve",
+              "host": ["{{RESERVATION_URL}}"],
+              "path": ["api", "v1", "reservations", "1", "approve"]
+            }
+          }
+        },
+        {
+          "name": "View Reservation History & Audit",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{AUTH_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{RESERVATION_URL}}/api/v1/reservations/1/history",
+              "host": ["{{RESERVATION_URL}}"],
+              "path": ["api", "v1", "reservations", "1", "history"]
+            }
+          }
+        },
+        {
+          "name": "Reservation Status Summary Metrics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{AUTH_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{RESERVATION_URL}}/api/v1/reservations/summary/status",
+              "host": ["{{RESERVATION_URL}}"],
+              "path": ["api", "v1", "reservations", "summary", "status"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

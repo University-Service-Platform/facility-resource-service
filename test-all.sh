@@ -40,11 +40,12 @@ run_test "Check Availability POST" 'curl -s -X POST http://localhost:8081/api/re
 
 echo -e "\n--- 2. RESERVATION-SERVICE (Port 8082) & CROSS-SERVICE INTEGRATION ---"
 # Generate unique timeslot to prevent 409 conflict
-RAND_OFFSET=$(( RANDOM % 1000 + 1 ))
+# Generate unique future timestamp to prevent 409 slot conflict
+RAND_OFFSET=$(( (RANDOM * 100 + RANDOM) % 20000 + 1000 ))
 START_HOUR=$(( (RANDOM % 8) + 8 ))
 END_HOUR=$(( START_HOUR + 1 ))
-START_TIME=$(printf "2027-01-%02dT%02d:00:00" $(( (RAND_OFFSET % 25) + 1 )) $START_HOUR)
-END_TIME=$(printf "2027-01-%02dT%02d:00:00" $(( (RAND_OFFSET % 25) + 1 )) $END_HOUR)
+START_TIME=$(printf "2028-%02d-%02dT%02d:00:00" $(( (RAND_OFFSET % 12) + 1 )) $(( (RAND_OFFSET % 25) + 1 )) $START_HOUR)
+END_TIME=$(printf "2028-%02d-%02dT%02d:00:00" $(( (RAND_OFFSET % 12) + 1 )) $(( (RAND_OFFSET % 25) + 1 )) $END_HOUR)
 
 CREATE_RES=$(curl -s -X POST "http://localhost:8082/api/v1/reservations" \
   -H "Authorization: Bearer dev-token" \
