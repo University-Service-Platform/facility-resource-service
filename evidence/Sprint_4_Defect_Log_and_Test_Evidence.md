@@ -26,6 +26,7 @@
 | **DEF-04** | `mvnw: Permission denied` inside Alpine container | Medium | Linux execute bit (`+x`) was missing on `./mvnw` within repository checkout | Added `RUN chmod +x ./mvnw` step before packaging in Dockerfile | `docker build` |
 | **DEF-05** | `facility-resource-service` crashed on startup with connection refused | High | Missing `SPRING_DATASOURCE_DRIVER` env var caused Spring Boot to default to `org.h2.Driver` with a `jdbc:mysql` URL | Explicitly added `SPRING_DATASOURCE_DRIVER=com.mysql.cj.jdbc.Driver` to `docker-compose.yml` | `docker compose up` |
 | **DEF-06** | Gradle version incompatibility during reservation Docker build | High | Base Docker image had Gradle 8.10.2, incompatible with Spring Boot 4.0 plugin | Updated Dockerfile to invoke project's Gradle 9.7 wrapper (`./gradlew bootJar`) | `docker build` |
+| **DEF-07** | Tech Lead findings: Base `GET /availability-rules` returned 500 instead of 405, unknown paths returned 500, reservation returned bare `[]` without seed data | Medium | Missing 405/404 handlers in `GlobalExceptionHandler`, missing base GET route, missing `ApiResponse` wrapper and initial `data.sql` | Added root GET and 405/404 exception handlers in Facility service; added `ApiResponse<T>` wrapper and `data.sql` seeding in Reservation service | `curl` & `./test-all.sh` |
 
 ---
 
