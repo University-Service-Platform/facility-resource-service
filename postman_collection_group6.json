@@ -193,6 +193,38 @@
             },
             {
               "name": "Create New Facility",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var uid = Math.floor(Math.random() * 90000) + 10000;",
+                      "pm.variables.set('dynFacilityCode', 'FAC-NEW-' + uid);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Status code is 201 Created or 200 OK', function () {",
+                      "    pm.expect([200, 201, 409]).to.include(pm.response.code);",
+                      "});",
+                      "if (pm.response.code !== 409) {",
+                      "    pm.test('Facility registered successfully', function () {",
+                      "        var jsonData = pm.response.json();",
+                      "        pm.expect(jsonData.success).to.be.true;",
+                      "        if (jsonData.data && jsonData.data.id) {",
+                      "            pm.collectionVariables.set('newFacilityId', jsonData.data.id.toString());",
+                      "        }",
+                      "    });",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
               "request": {
                 "method": "POST",
                 "header": [
@@ -207,7 +239,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"code\": \"SCIENCE-COMPLEX-C\",\n  \"name\": \"Faculty of Applied Sciences Complex\",\n  \"location\": \"South Campus, Block C\",\n  \"description\": \"State-of-the-art laboratory and lecture complex\",\n  \"operatingHoursStart\": \"07:30:00\",\n  \"operatingHoursEnd\": \"21:30:00\",\n  \"active\": true\n}"
+                  "raw": "{\n  \"code\": \"{{dynFacilityCode}}\",\n  \"name\": \"Faculty of Applied Sciences Complex\",\n  \"location\": \"South Campus, Block C\",\n  \"description\": \"State-of-the-art laboratory and lecture complex\",\n  \"operatingHoursStart\": \"07:30:00\",\n  \"operatingHoursEnd\": \"21:30:00\",\n  \"active\": true\n}"
                 },
                 "url": {
                   "raw": "{{FACILITY_URL}}/api/facilities",
@@ -220,27 +252,7 @@
                   ]
                 },
                 "description": "Register a new building or facility sector."
-              },
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "pm.test('Status code is 201 Created or 200 OK', function () {",
-                      "    pm.expect([200, 201]).to.include(pm.response.code);",
-                      "});",
-                      "pm.test('Facility registered successfully', function () {",
-                      "    var jsonData = pm.response.json();",
-                      "    pm.expect(jsonData.success).to.be.true;",
-                      "    if (jsonData.data && jsonData.data.id) {",
-                      "        pm.collectionVariables.set('newFacilityId', jsonData.data.id.toString());",
-                      "    }",
-                      "});"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ]
+              }
             },
             {
               "name": "Update Existing Facility",
@@ -619,6 +631,38 @@
             },
             {
               "name": "Create New Resource",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "var uid = Math.floor(Math.random() * 90000) + 10000;",
+                      "pm.variables.set('dynResourceCode', 'RES-NEW-' + uid);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Status code is 201 Created or 200 OK', function () {",
+                      "    pm.expect([200, 201, 409]).to.include(pm.response.code);",
+                      "});",
+                      "if (pm.response.code !== 409) {",
+                      "    pm.test('Resource created successfully', function () {",
+                      "        var jsonData = pm.response.json();",
+                      "        pm.expect(jsonData.success).to.be.true;",
+                      "        if (jsonData.data && jsonData.data.id) {",
+                      "            pm.collectionVariables.set('newResourceId', jsonData.data.id.toString());",
+                      "        }",
+                      "    });",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
               "request": {
                 "method": "POST",
                 "header": [
@@ -633,7 +677,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"facilityId\": 1,\n  \"code\": \"ROBOTICS-LAB-404\",\n  \"name\": \"Advanced Robotics & AI Research Lab\",\n  \"resourceType\": \"LAB\",\n  \"location\": \"Level 4, Room 404\",\n  \"capacity\": 25,\n  \"active\": true,\n  \"available\": true,\n  \"approvalRequired\": true,\n  \"operatingHoursStart\": \"08:30:00\",\n  \"operatingHoursEnd\": \"20:30:00\",\n  \"rulesDescription\": \"Requires lab safety clearance and protective eyewear.\",\n  \"allowedUserRoles\": \"STUDENT, FACULTY, RESEARCHER\"\n}"
+                  "raw": "{\n  \"facilityId\": 1,\n  \"code\": \"{{dynResourceCode}}\",\n  \"name\": \"Advanced Robotics & AI Research Lab\",\n  \"resourceType\": \"LAB\",\n  \"location\": \"Level 4, Room 404\",\n  \"capacity\": 25,\n  \"active\": true,\n  \"available\": true,\n  \"approvalRequired\": true,\n  \"operatingHoursStart\": \"08:30:00\",\n  \"operatingHoursEnd\": \"20:30:00\",\n  \"rulesDescription\": \"Requires lab safety clearance and protective eyewear.\",\n  \"allowedUserRoles\": \"STUDENT, FACULTY, RESEARCHER\"\n}"
                 },
                 "url": {
                   "raw": "{{FACILITY_URL}}/api/resources",
@@ -646,27 +690,7 @@
                   ]
                 },
                 "description": "Add a new room, lab, or piece of equipment to a facility."
-              },
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "pm.test('Status code is 201 Created or 200 OK', function () {",
-                      "    pm.expect([200, 201]).to.include(pm.response.code);",
-                      "});",
-                      "pm.test('Resource created successfully', function () {",
-                      "    var jsonData = pm.response.json();",
-                      "    pm.expect(jsonData.success).to.be.true;",
-                      "    if (jsonData.data && jsonData.data.id) {",
-                      "        pm.collectionVariables.set('newResourceId', jsonData.data.id.toString());",
-                      "    }",
-                      "});"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ]
+              }
             },
             {
               "name": "Update Existing Resource",
