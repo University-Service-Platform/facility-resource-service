@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalTime;
 import java.util.List;
 
+import org.springframework.security.test.context.support.WithMockUser;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -37,6 +39,7 @@ class ResourceControllerTest {
     private ResourceService resourceService;
 
     @Test
+    @WithMockUser(roles = "STUDENT")
     @DisplayName("GET /api/resources should return list of resources with 200 OK")
     void searchResources_Success() throws Exception {
         ResourceDTO dto = new ResourceDTO();

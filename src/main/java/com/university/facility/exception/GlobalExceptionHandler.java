@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -69,6 +73,30 @@ public class GlobalExceptionHandler {
                 errors
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleMethodNotSupportedException(
+            HttpRequestMethodNotSupportedException ex, HttpServletRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.METHOD_NOT_ALLOWED.value(),
+                HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    @ExceptionHandler({NoResourceFoundException.class, NoHandlerFoundException.class})
+    public ResponseEntity<ErrorResponse> handleNotFoundException(
+            Exception ex, HttpServletRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                ex.getMessage() != null ? ex.getMessage() : "Resource not found",
+                request.getRequestURI()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)

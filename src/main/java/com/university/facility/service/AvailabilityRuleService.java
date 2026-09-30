@@ -26,6 +26,13 @@ public class AvailabilityRuleService {
     }
 
     @Transactional(readOnly = true)
+    public List<AvailabilityRuleDTO> getAllRules() {
+        return availabilityRuleRepository.findAll().stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
     public List<AvailabilityRuleDTO> getRulesByResource(Long resourceId) {
         if (!resourceRepository.existsById(resourceId)) {
             throw new ResourceNotFoundException("Resource not found with ID: " + resourceId);

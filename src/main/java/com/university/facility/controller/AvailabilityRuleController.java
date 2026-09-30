@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/availability-rules")
+@RequestMapping({"/api/availability-rules", "/api/v1/availability-rules"})
 @Tag(name = "Availability Rules Management", description = "Endpoints for defining structured availability, blackout, and role-based booking rules (USMG6-104, USMG6-28)")
 public class AvailabilityRuleController {
 
@@ -22,6 +22,13 @@ public class AvailabilityRuleController {
 
     public AvailabilityRuleController(AvailabilityRuleService availabilityRuleService) {
         this.availabilityRuleService = availabilityRuleService;
+    }
+
+    @GetMapping
+    @Operation(summary = "Get all availability rules", description = "Retrieve all structured rules configured across all resources")
+    public ResponseEntity<ApiResponse<List<AvailabilityRuleDTO>>> getAllRules() {
+        List<AvailabilityRuleDTO> rules = availabilityRuleService.getAllRules();
+        return ResponseEntity.ok(ApiResponse.success("Availability rules retrieved successfully", rules));
     }
 
     @GetMapping("/resource/{resourceId}")
