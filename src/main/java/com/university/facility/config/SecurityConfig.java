@@ -54,7 +54,11 @@ public class SecurityConfig {
                     "/swagger-ui/**",
                     "/swagger-ui.html",
                     "/h2-console/**",
-                    "/actuator/**"
+                    "/actuator/**",
+                    "/api/resources/*/validate",
+                    "/api/resources/*/validate/**",
+                    "/api/resources/code/*/validate",
+                    "/api/resources/check-availability"
                 ).permitAll()
                 .anyRequest().authenticated()
             )

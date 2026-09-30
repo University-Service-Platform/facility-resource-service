@@ -27,3 +27,7 @@ ON DUPLICATE KEY UPDATE code=code;
 INSERT INTO resources (id, facility_id, code, name, resource_type, location, capacity, active, available, approval_required, operating_hours_start, operating_hours_end, rules_description, created_at, updated_at)
 VALUES (4, 3, 'BASKETBALL-COURT-1', 'Indoor Basketball Court 1', 'SPORTS_FIELD', 'Main Hall', 20, true, true, false, '06:00:00', '21:00:00', 'Appropriate footwear mandatory.', NOW(), NOW())
 ON DUPLICATE KEY UPDATE code=code;
+
+INSERT INTO resources (id, facility_id, code, name, resource_type, location, capacity, active, available, approval_required, operating_hours_start, operating_hours_end, rules_description, created_at, updated_at)
+VALUES (5, 1, 'CONF-ROOM-202', 'Executive Conference Room 202', 'ROOM', 'Room A-202', 15, true, false, true, '08:00:00', '20:00:00', 'Closed for maintenance and audio-visual upgrades.', NOW(), NOW())
+ON DUPLICATE KEY UPDATE code=code;
