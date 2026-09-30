@@ -1119,7 +1119,7 @@
                       "    var jsonData = pm.response.json();",
                       "    pm.expect(jsonData.data.exists).to.be.true;",
                       "    pm.expect(jsonData.data.validForReservation).to.be.true;",
-                      "    pm.expect(jsonData.data.code).to.eql('LAB-101');",
+                      "    pm.expect(jsonData.data.resourceCode || jsonData.data.code).to.eql('LAB-101');",
                       "});"
                     ],
                     "type": "text/javascript"
@@ -1256,7 +1256,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"resourceId\": 1,\n  \"date\": \"2027-05-10\",\n  \"startTime\": \"09:00:00\",\n  \"endTime\": \"11:00:00\",\n  \"attendees\": 15,\n  \"userRole\": \"STUDENT\"\n}"
+                  "raw": "{\n  \"resourceId\": 1,\n  \"date\": \"2027-05-10\",\n  \"startTime\": \"09:00:00\",\n  \"endTime\": \"11:00:00\",\n  \"requestedCapacity\": 15,\n  \"userRole\": \"STUDENT\"\n}"
                 },
                 "url": {
                   "raw": "{{FACILITY_URL}}/api/resources/check-availability",
@@ -1301,7 +1301,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"resourceId\": 1,\n  \"date\": \"2027-05-10\",\n  \"startTime\": \"09:00:00\",\n  \"endTime\": \"11:00:00\",\n  \"attendees\": 500,\n  \"userRole\": \"STUDENT\"\n}"
+                  "raw": "{\n  \"resourceId\": 1,\n  \"date\": \"2027-05-10\",\n  \"startTime\": \"09:00:00\",\n  \"endTime\": \"11:00:00\",\n  \"requestedCapacity\": 500,\n  \"userRole\": \"STUDENT\"\n}"
                 },
                 "url": {
                   "raw": "{{FACILITY_URL}}/api/resources/check-availability",
@@ -1327,7 +1327,8 @@
                       "pm.test('Rejected due to capacity bounds', function () {",
                       "    var jsonData = pm.response.json();",
                       "    pm.expect(jsonData.data.available).to.be.false;",
-                      "    pm.expect(jsonData.data.reason).to.include('capacity');",
+                      "    pm.expect(jsonData.data.capacitySufficient).to.be.false;",
+                      "    pm.expect(jsonData.data.message || jsonData.data.reason).to.include('capacity');",
                       "});"
                     ],
                     "type": "text/javascript"
@@ -1416,6 +1417,10 @@
               "request": {
                 "method": "POST",
                 "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{AUTH_TOKEN}}"
+                  },
                   {
                     "key": "Content-Type",
                     "value": "application/json"
