@@ -1,5 +1,5 @@
 # Stage 1: Build stage
-FROM eclipse-temurin:17-jdk-alpine AS builder
+FROM eclipse-temurin:17-jdk AS builder
 WORKDIR /app
 
 # Copy maven wrapper and pom.xml
@@ -17,7 +17,7 @@ COPY src src
 RUN ./mvnw package -DskipTests
 
 # Stage 2: Runtime stage
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:17-jre
 WORKDIR /app
 
 # Copy artifact from builder stage

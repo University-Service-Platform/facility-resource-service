@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: facility-resource-service
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/facilities
+    envVars:
+      - key: PORT
+        value: 8081

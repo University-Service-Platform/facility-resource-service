@@ -27,6 +27,8 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://facility-db:3306/facility_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_DRIVER=com.mysql.cj.jdbc.Driver
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQLDialect
     depends_on:
       facility-db:
         condition: service_healthy
